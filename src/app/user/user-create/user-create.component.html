@@ -1,0 +1,53 @@
+<mat-card *ngIf="isLoading" style="display: flex;justify-content: center;align-items: center;">
+    <mat-spinner diameter="20"></mat-spinner>
+</mat-card>
+//id, username,dob,age,photo,gender,dateofcreation
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+        <mat-form-field>
+            <mat-label>First Name*</mat-label>
+            <input matInput type="text" name="firstname" id="firstname" formControlName="firstname" />
+            <mat-error *ngIf="userForm.get('firstname').invalid">{{getNameErrorMessage()}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Last Name*</mat-label>
+            <input matInput type="text" name="lastname" id="lastname" formControlName="lastname" />
+            <mat-error *ngIf="userForm.get('lastname').invalid">{{getNameErrorMessage()}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Date of Birth*</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dob">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Gender*</mat-label>
+            <mat-select formControlName="gender">
+                <mat-option value="male">Male
+                </mat-option>
+                <mat-option value="female">Female
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="file-select-container">
+            <input type="file" style="display: none" #fileInput accept="image/*" formControlName="photo"
+                (change)="onFileSelect($event)" />
+            <button mat-raised-button color="primary" class="file-select-button" (click)="onClickFileInputButton()">
+                <mat-icon>attach_file</mat-icon>
+                Upload Photo
+            </button>
+
+            <p class="file-name" *ngIf="!file; else fileName">No Files Selected</p>
+            <ng-template #fileName>
+                <p class="file-name">{{ file?.name }}</p>
+            </ng-template>
+        </div>
+
+        <div style="padding:15px;text-align:right">
+            <button type="button" click="onCancel()" mat-raised-button>Cancel</button>
+            <button type="submit" color="primary" [disabled]="!(userForm.valid && userForm.dirty)"
+                mat-raised-button>Save</button>
+        </div>
+
+    </div>
+</form>
